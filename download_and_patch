@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+set -eu
+
+[ "$#" -ne 0 ] && { echo "No arguments expected" >&2; exit 1; }
+
+if ! [ -f NVIDIA-Linux-x86_64-470.256.02.run ]; then
+  wget "https://us.download.nvidia.com/XFree86/Linux-x86_64/470.256.02/NVIDIA-Linux-x86_64-470.256.02.run"
+fi
+echo "a837946dd24d7945c1962a695f1f31965f3ceb6927f52cd08fd51b8db138b7a888bbeab69243f5c8468a7bd7ccd47f5dbdb48a1ca81264866c1ebb7d88628f88 NVIDIA-Linux-x86_64-470.256.02.run" | sha512sum -c
+
+rm -rf NVIDIA-Linux-x86_64-470.256.02
+sh NVIDIA-Linux-x86_64-470.256.02.run --extract-only
+
+SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+apply_patch() {
+    patch -Np1 -i "$SCRIPTPATH/patches/$1"
+}
+
+cd NVIDIA-Linux-x86_64-470.256.02/kernel
+apply_patch 0001-Fix-conftest-to-ignore-implicit-function-declaration.patch
+apply_patch 0002-Fix-conftest-to-use-a-short-wchar_t.patch
+apply_patch 0003-Fix-conftest-to-use-nv_drm_gem_vmap-which-has-the-se.patch
+apply_patch kernel-6.10.patch
+apply_patch kernel-6.12.patch
+apply_patch nvidia-470xx-fix-gcc-15.patch
+apply_patch nvidia-470xx-fix-linux-6.13.patch
+apply_patch nvidia-470xx-fix-linux-6.14.patch
+apply_patch nvidia-470xx-fix-linux-6.15.patch
+apply_patch nvidia-470xx-fix-linux-6.17.patch
