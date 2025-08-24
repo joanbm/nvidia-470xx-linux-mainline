@@ -12,4 +12,4 @@ This repository is roughly aligned with the [Arch Linux User Repository nvidia-4
 
 # Kernel parameters
 
-Once the driver is installed, additionally add the following parameters to your kernel command line: `module_blacklist=nouveau,nova_core nvidia-drm.modeset=1`
+If once the driver is installed, you run into conflicts with Nouveau, add the following parameters to your kernel command line: `module_blacklist=nouveau,nova_core`
