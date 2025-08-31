@@ -12,4 +12,14 @@ This repository is roughly aligned with the [Arch Linux User Repository nvidia-4
 
 # Kernel parameters
 
-If once the driver is installed, you run into conflicts with Nouveau, add the following parameters to your kernel command line: `module_blacklist=nouveau,nova_core`
+If once the driver is installed, you run into conflicts with Nouveau or NOVA, run the following command to blacklist the module:
+
+```sh
+sudo install -Dm644 /dev/stdin "/usr/lib/modprobe.d/nvidia-470xx-linux-mainline.conf" <<END
+blacklist nouveau
+blacklist nova_core
+blacklist nova_drm
+END
+```
+
+Or, you can add the following parameters to your kernel command line: `module_blacklist=nouveau,nova_core,nova_drm`
