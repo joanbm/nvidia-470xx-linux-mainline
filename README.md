@@ -4,6 +4,15 @@ Patches for the officially unsupported nvidia-470xx driver to work with the late
 
 This repository is roughly aligned with the [Arch Linux User Repository nvidia-470xx-dkms](https://aur.archlinux.org/packages/nvidia-470xx-dkms) package, but may contain newer patches.
 
+# Quickstart (Debian, Ubuntu and derivatives)
+
+```sh
+sudo apt install git wget build-essential linux-headers-generic libglvnd-dev
+git clone https://github.com/joanbm/nvidia-470xx-linux-mainline
+cd nvidia-470xx-linux-mainline
+./install
+```
+
 # Scripts
 
 * `./install`: Download the driver, apply the patches, and launch the installer.
