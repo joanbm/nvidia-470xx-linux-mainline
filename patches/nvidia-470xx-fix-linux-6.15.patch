@@ -20,7 +20,7 @@ various of the necessary changes.
 ---
  Kbuild                                  | 25 +++++++++----------------
  common/inc/nv-mm.h                      | 18 ++++++++++++++++++
- common/inc/nv-timer.h                   | 10 ++++++++++
+ common/inc/nv-timer.h                   |  1 +
  nvidia-drm/nvidia-drm-connector.c       |  8 ++++++++
  nvidia-drm/nvidia-drm-gem-user-memory.c |  9 +++++++++
  nvidia-drm/nvidia-drm-gem.c             |  5 +++++
@@ -30,7 +30,7 @@ various of the necessary changes.
  nvidia/nv-frontend.c                    |  1 +
  nvidia/nv-mmap.c                        |  6 ++++++
  nvidia/nv.c                             |  4 ++--
- 12 files changed, 82 insertions(+), 20 deletions(-)
+ 12 files changed, 73 insertions(+), 20 deletions(-)
 
 diff --git a/Kbuild b/Kbuild
 index eadd8b2..f333e0b 100644
@@ -135,20 +135,6 @@ index 18df6ea..396e121 100644
  
  #include "conftest.h"
  
-@@ -63,4 +64,13 @@ static inline void nv_timer_setup(struct nv_timer *nv_timer,
- #endif
- }
- 
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 2, 0)
-+// Rel. commit "treewide: Switch/rename to timer_delete[_sync]()" (Thomas Gleixner, 5 Apr 2025)
-+// This provides a shim for ancient kernels before timer_delete_sync was introduced
-+static inline int timer_delete_sync(struct timer_list *timer)
-+{
-+    return del_timer_sync(timer);
-+}
-+#endif
-+
- #endif // __NV_TIMER_H__
 diff --git a/nvidia-drm/nvidia-drm-connector.c b/nvidia-drm/nvidia-drm-connector.c
 index fe838ef..c35c9ec 100644
 --- a/nvidia-drm/nvidia-drm-connector.c
