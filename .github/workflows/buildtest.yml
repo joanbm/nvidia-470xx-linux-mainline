@@ -2,7 +2,7 @@ name: Build test NVIDIA driver patches
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
   workflow_dispatch:
 
