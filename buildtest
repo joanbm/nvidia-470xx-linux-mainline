@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 set -eu
 
+[ "$#" -ne 0 ] && { echo "No arguments expected" >&2; exit 1; }
+
 ./extract_and_patch
 cd NVIDIA-Linux-x86_64-470.256.02/kernel
 make "-j$(nproc)"
