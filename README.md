@@ -17,7 +17,8 @@ cd nvidia-470xx-linux-mainline
 
 * `./install`: Download the driver, apply the patches, and launch the installer.
 * `./buildtest [kernel_release]`: Download the driver, apply the patches, and build the kernel driver for the given release. For development.
-* `./download_and_patch`: Download the driver, apply the patches, and nothing else. For development.
+* `./download`: Download the driver from the NVIDIA website.
+* `./extract_and_patch`: Extract the driver and apply the patches, and nothing else. For development.
 
 # Kernel parameters
 

@@ -3,6 +3,6 @@ set -eu
 
 [ "$#" -ne 0 ] && { echo "No arguments expected" >&2; exit 1; }
 
-./download_and_patch
+./extract_and_patch
 cd NVIDIA-Linux-x86_64-470.256.02
 sudo ./nvidia-installer
