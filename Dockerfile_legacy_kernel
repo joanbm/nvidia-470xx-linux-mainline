@@ -1,0 +1,20 @@
+# Test the build against a legacy kernel
+FROM docker.io/library/debian:oldoldstable
+
+RUN export DEBIAN_FRONTEND=noninteractive \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        wget ca-certificates \
+        build-essential \
+        linux-headers-generic \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY . .
+
+ENV KERNEL_BASE_DIR=/lib/modules/*
+ENV SYSSRC=${KERNEL_BASE_DIR}/source
+ENV SYSOUT=${KERNEL_BASE_DIR}/build
+
+CMD ["./buildtest"]

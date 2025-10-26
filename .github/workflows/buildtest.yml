@@ -1,0 +1,27 @@
+name: Build test NVIDIA driver patches
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download NVIDIA driver
+        run: ./download
+
+      - name: Validate building against the legacy kernel
+        run: |
+          docker build -f Dockerfile_legacy_kernel -t nvidia-470-legacy .
+          docker run --network none --rm nvidia-470-legacy
+
+      - name: Validate building against the recent kernel
+        run: |
+          docker build -f Dockerfile_recent_kernel -t nvidia-470-recent .
+          docker run --network none --rm nvidia-470-recent
