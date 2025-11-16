@@ -1,17 +1,18 @@
-From 3c7a67848147e5908a91857d758d7d3fe482e723 Mon Sep 17 00:00:00 2001
+From 8f8959536182b5c0b2a9d0efbe3b3991f56900ed Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Joan=20Bruguera=20Mic=C3=B3?= <joanbrugueram@gmail.com>
 Date: Sat, 1 Nov 2025 14:11:25 +0000
-Subject: [PATCH] Fix build for Linux Next-20251106
+Subject: [PATCH] Fix build for Linux Next-20251114
 
 THIS PATCH IS UNTESTED!
 TODO: REMOVE pr_warn_ratelimited USES ONCE TESTED.
 ---
  common/inc/nv-memdbg.h       |  5 +++--
  common/inc/nv-time.h         | 10 ++++++++--
+ conftest.sh                  |  5 +++++
  nvidia-drm/nvidia-drm-priv.h |  3 +++
  nvidia/nv-dma.c              |  8 ++++++++
  nvidia/os-interface.c        |  2 +-
- 5 files changed, 23 insertions(+), 5 deletions(-)
+ 6 files changed, 28 insertions(+), 5 deletions(-)
 
 diff --git a/common/inc/nv-memdbg.h b/common/inc/nv-memdbg.h
 index c618ead..8212d44 100644
@@ -64,6 +65,22 @@ index 0133383..584633f 100644
      {
          return NV_ERR_GENERIC;
      }
+diff --git a/conftest.sh b/conftest.sh
+index 263a404..1bd5b3c 100755
+--- a/conftest.sh
++++ b/conftest.sh
+@@ -208,6 +208,11 @@ build_cflags() {
+ 
+     # Specify the C standard, instead of defaulting to the compiler's
+     CFLAGS="$CFLAGS -std=gnu17"
++
++    # Rel. commit "Kbuild: enable -fms-extensions" (Rasmus Villemoes, 20 Oct 2025)
++    # Enable the flags since the Linux headers use those extensions in some structs
++    # See https://www.phoronix.com/news/Linux-6.19-Patch-Would-MS-Ext
++    CFLAGS="$CFLAGS -fms-extensions"
+ }
+ 
+ CONFTEST_PREAMBLE="#include \"conftest/headers.h\"
 diff --git a/nvidia-drm/nvidia-drm-priv.h b/nvidia-drm/nvidia-drm-priv.h
 index dce6a53..ac932f9 100644
 --- a/nvidia-drm/nvidia-drm-priv.h
