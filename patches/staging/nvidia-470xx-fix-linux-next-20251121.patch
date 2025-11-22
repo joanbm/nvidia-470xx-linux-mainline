@@ -87,7 +87,7 @@ index 263a404..b34369a 100755
              int conftest_vm_area_struct_has_const_vm_flags(void) {
 -                return offsetof(struct vm_area_struct, __vm_flags);
 +                // Rel. commit 'mm: introduce VMA flags bitmap type' (Lorenzo Stoakes, 14 Nov 2025)
-+                // Check for the const-ness of __vm_flags directly: If vm_flags
++                // Check for the const-ness of vm_flags directly: If vm_flags
 +                // is not const, _Generic doesn't match and the build fails)
 +                struct vm_area_struct vma;
 +                return _Generic(&vma.vm_flags, const typeof(vma.vm_flags) *: 1);
