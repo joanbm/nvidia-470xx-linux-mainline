@@ -1,18 +1,18 @@
-From 8f8959536182b5c0b2a9d0efbe3b3991f56900ed Mon Sep 17 00:00:00 2001
+From d60a967e9c5642625f1f82f5764a5f86e8635f29 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Joan=20Bruguera=20Mic=C3=B3?= <joanbrugueram@gmail.com>
 Date: Sat, 1 Nov 2025 14:11:25 +0000
-Subject: [PATCH] Fix build for Linux Next-20251114
+Subject: [PATCH] Fix build for Linux Next-20251121
 
 THIS PATCH IS UNTESTED!
 TODO: REMOVE pr_warn_ratelimited USES ONCE TESTED.
 ---
  common/inc/nv-memdbg.h       |  5 +++--
  common/inc/nv-time.h         | 10 ++++++++--
- conftest.sh                  |  5 +++++
+ conftest.sh                  | 11 ++++++++++-
  nvidia-drm/nvidia-drm-priv.h |  3 +++
  nvidia/nv-dma.c              |  8 ++++++++
  nvidia/os-interface.c        |  2 +-
- 6 files changed, 28 insertions(+), 5 deletions(-)
+ 6 files changed, 33 insertions(+), 6 deletions(-)
 
 diff --git a/common/inc/nv-memdbg.h b/common/inc/nv-memdbg.h
 index c618ead..8212d44 100644
@@ -66,7 +66,7 @@ index 0133383..584633f 100644
          return NV_ERR_GENERIC;
      }
 diff --git a/conftest.sh b/conftest.sh
-index 263a404..1bd5b3c 100755
+index 263a404..b34369a 100755
 --- a/conftest.sh
 +++ b/conftest.sh
 @@ -208,6 +208,11 @@ build_cflags() {
@@ -81,6 +81,19 @@ index 263a404..1bd5b3c 100755
  }
  
  CONFTEST_PREAMBLE="#include \"conftest/headers.h\"
+@@ -5013,7 +5018,11 @@ compile_test() {
+             CODE="
+             #include <linux/mm_types.h>
+             int conftest_vm_area_struct_has_const_vm_flags(void) {
+-                return offsetof(struct vm_area_struct, __vm_flags);
++                // Rel. commit 'mm: introduce VMA flags bitmap type' (Lorenzo Stoakes, 14 Nov 2025)
++                // Check for the const-ness of __vm_flags directly: If vm_flags
++                // is not const, _Generic doesn't match and the build fails)
++                struct vm_area_struct vma;
++                return _Generic(&vma.vm_flags, const typeof(vma.vm_flags) *: 1);
+             }"
+ 
+             compile_check_conftest "$CODE" "NV_VM_AREA_STRUCT_HAS_CONST_VM_FLAGS" "" "types"
 diff --git a/nvidia-drm/nvidia-drm-priv.h b/nvidia-drm/nvidia-drm-priv.h
 index dce6a53..ac932f9 100644
 --- a/nvidia-drm/nvidia-drm-priv.h
@@ -136,5 +149,5 @@ index e7c1f9d..7379965 100644
  
  // return TRUE if the caller is the super-user
 -- 
-2.51.2
+2.52.0
 
