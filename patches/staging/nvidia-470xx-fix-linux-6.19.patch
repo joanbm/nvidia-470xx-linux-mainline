@@ -1,18 +1,16 @@
-From d60a967e9c5642625f1f82f5764a5f86e8635f29 Mon Sep 17 00:00:00 2001
+From 5abaa0e1f22d528d0e1ac9e72ce70e788a7a3b39 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Joan=20Bruguera=20Mic=C3=B3?= <joanbrugueram@gmail.com>
-Date: Sat, 1 Nov 2025 14:11:25 +0000
-Subject: [PATCH] Fix build for Linux Next-20251121
+Date: Sun, 7 Dec 2025 20:35:30 +0000
+Subject: [PATCH] Tentative fix for NVIDIA 470.256.02 driver for Linux 6.19-rc1
 
-THIS PATCH IS UNTESTED!
-TODO: REMOVE pr_warn_ratelimited USES ONCE TESTED.
 ---
  common/inc/nv-memdbg.h       |  5 +++--
  common/inc/nv-time.h         | 10 ++++++++--
  conftest.sh                  | 11 ++++++++++-
  nvidia-drm/nvidia-drm-priv.h |  3 +++
- nvidia/nv-dma.c              |  8 ++++++++
+ nvidia/nv-dma.c              |  7 +++++++
  nvidia/os-interface.c        |  2 +-
- 6 files changed, 33 insertions(+), 6 deletions(-)
+ 6 files changed, 32 insertions(+), 6 deletions(-)
 
 diff --git a/common/inc/nv-memdbg.h b/common/inc/nv-memdbg.h
 index c618ead..8212d44 100644
@@ -66,7 +64,7 @@ index 0133383..584633f 100644
          return NV_ERR_GENERIC;
      }
 diff --git a/conftest.sh b/conftest.sh
-index 263a404..b34369a 100755
+index 263a404..294d6e5 100755
 --- a/conftest.sh
 +++ b/conftest.sh
 @@ -208,6 +208,11 @@ build_cflags() {
@@ -109,7 +107,7 @@ index dce6a53..ac932f9 100644
  
  #include "nvkms-kapi.h"
 diff --git a/nvidia/nv-dma.c b/nvidia/nv-dma.c
-index 9f1ea11..955b044 100644
+index 9f1ea11..e08d7c8 100644
 --- a/nvidia/nv-dma.c
 +++ b/nvidia/nv-dma.c
 @@ -12,6 +12,7 @@
@@ -120,14 +118,13 @@ index 9f1ea11..955b044 100644
  
  #define NV_DMA_DEV_PRINTF(debuglevel, dma_dev, format, ... )                \
      nv_printf(debuglevel, "NVRM: %s: " format,                              \
-@@ -764,7 +765,14 @@ static NvBool nv_dma_is_map_resource_implemented
+@@ -764,7 +765,13 @@ static NvBool nv_dma_is_map_resource_implemented
  #endif
      }
  
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(999, 0, 0)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
 +    // Rel. commit "dma-mapping: remove unused mapping resource callbacks" (Leon Romanovsky, 15 Oct 2025)
 +    // https://lore.kernel.org/all/20251015-remove-map-page-v5-0-3bbfe3a25cdf@kernel.org/
-+    pr_warn_ratelimited("NVIDIA-470xx: Hit ops->map_phys check %s:%d\n", __FILE__, __LINE__);
 +    return (ops->map_phys != NULL);
 +#else
      return (ops->map_resource != NULL);
