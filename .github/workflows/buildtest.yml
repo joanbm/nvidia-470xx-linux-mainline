@@ -9,6 +9,9 @@ on:
 jobs:
   build-validation:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        kernel: [legacy, stable, mainline]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,20 +19,14 @@ jobs:
       - name: Download NVIDIA driver
         run: ./download
 
-      - name: Validate building against the legacy kernel
+      - name: Build image with the ${{ matrix.kernel }} kernel
         run: |
-          docker build -f Dockerfile_legacy_kernel -t nvidia-470-legacy .
-          docker run --network none --rm nvidia-470-legacy
-          docker run --network none --rm --env NVIDIA_470XX_APPLY_STAGING_PATCHES=1 nvidia-470-legacy
+          docker build -f Dockerfile_${{ matrix.kernel }}_kernel -t nvidia-470xx-${{ matrix.kernel }} .
 
-      - name: Validate building against the stable kernel
+      - name: Build against the ${{ matrix.kernel }} kernel
         run: |
-          docker build -f Dockerfile_stable_kernel -t nvidia-470-stable .
-          docker run --network none --rm nvidia-470-stable
-          docker run --network none --rm --env NVIDIA_470XX_APPLY_STAGING_PATCHES=1 nvidia-470-stable
+          docker run --network none --rm nvidia-470xx-${{ matrix.kernel }}
 
-      - name: Validate building against the mainline kernel
+      - name: Build against the ${{ matrix.kernel }} kernel with staging patches
         run: |
-          docker build -f Dockerfile_mainline_kernel -t nvidia-470-mainline .
-          docker run --network none --rm nvidia-470-mainline
-          docker run --network none --rm --env NVIDIA_470XX_APPLY_STAGING_PATCHES=1 nvidia-470-mainline
+          docker run --network none --rm --env NVIDIA_470XX_APPLY_STAGING_PATCHES=1 nvidia-470xx-${{ matrix.kernel }}
