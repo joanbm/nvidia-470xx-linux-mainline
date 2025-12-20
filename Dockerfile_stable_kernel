@@ -1,0 +1,20 @@
+# Test the build against a bleeding-edge kernel
+FROM registry.fedoraproject.org/fedora:rawhide
+
+RUN dnf -y copr enable @kernel-vanilla/stable \
+    && dnf -y update \
+    && dnf -y install --setopt=install_weak_deps=False \
+        wget \
+        gcc make patch \
+        kernel-devel \
+    && dnf clean all \
+    && rm -rf /var/cache/dnf
+
+WORKDIR /app
+
+COPY . .
+
+ENV KERNEL_BASE_DIR=/usr/src/kernels/*
+ENV SYSSRC=${KERNEL_BASE_DIR}
+
+CMD ["./buildtest"]

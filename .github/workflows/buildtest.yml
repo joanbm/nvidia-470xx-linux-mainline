@@ -22,8 +22,14 @@ jobs:
           docker run --network none --rm nvidia-470-legacy
           docker run --network none --rm --env NVIDIA_470XX_APPLY_STAGING_PATCHES=1 nvidia-470-legacy
 
-      - name: Validate building against the recent kernel
+      - name: Validate building against the stable kernel
         run: |
-          docker build -f Dockerfile_recent_kernel -t nvidia-470-recent .
-          docker run --network none --rm nvidia-470-recent
-          docker run --network none --rm --env NVIDIA_470XX_APPLY_STAGING_PATCHES=1 nvidia-470-recent
+          docker build -f Dockerfile_stable_kernel -t nvidia-470-stable .
+          docker run --network none --rm nvidia-470-stable
+          docker run --network none --rm --env NVIDIA_470XX_APPLY_STAGING_PATCHES=1 nvidia-470-stable
+
+      - name: Validate building against the mainline kernel
+        run: |
+          docker build -f Dockerfile_mainline_kernel -t nvidia-470-mainline .
+          docker run --network none --rm nvidia-470-mainline
+          docker run --network none --rm --env NVIDIA_470XX_APPLY_STAGING_PATCHES=1 nvidia-470-mainline
