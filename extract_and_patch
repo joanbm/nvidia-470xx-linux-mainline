@@ -24,8 +24,8 @@ apply_patch nvidia-470xx-fix-linux-6.13.patch
 apply_patch nvidia-470xx-fix-linux-6.14.patch
 apply_patch nvidia-470xx-fix-linux-6.15.patch
 apply_patch nvidia-470xx-fix-linux-6.17.patch
-apply_patch nvidia-470xx-fix-linux-next-drm-state-pointer.patch
-apply_patch nvidia-470xx-fix-linux-6.19.patch
+apply_patch nvidia-470xx-fix-linux-6.19-part1.patch
+apply_patch nvidia-470xx-fix-linux-6.19-part2.patch
 if [ -n "${NVIDIA_470XX_APPLY_STAGING_PATCHES:-}" ]; then
     true
 fi

@@ -1,7 +1,8 @@
 From 5abaa0e1f22d528d0e1ac9e72ce70e788a7a3b39 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Joan=20Bruguera=20Mic=C3=B3?= <joanbrugueram@gmail.com>
 Date: Sun, 7 Dec 2025 20:35:30 +0000
-Subject: [PATCH] Tentative fix for NVIDIA 470.256.02 driver for Linux 6.19-rc1
+Subject: [PATCH 2/2] Tentative fix for NVIDIA 470.256.02 driver for Linux
+ 6.19-rc1 (part 2: rest of fixes)
 
 ---
  common/inc/nv-memdbg.h       |  5 +++--

@@ -1,7 +1,8 @@
 From 509447266ca6cca596cbd6a6bf01175a6189ccb8 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Joan=20Bruguera=20Mic=C3=B3?= <joanbrugueram@gmail.com>
 Date: Sun, 26 Oct 2025 11:24:50 +0000
-Subject: [PATCH] Fix build for Linux Next (DRM state pointer cleanup)
+Subject: [PATCH 1/2] Tentative fix for NVIDIA 470.256.02 driver for Linux
+ 6.19-rc1 (part 1: DRM state pointer cleanup)
 
 In commit 'drm/atomic: Change state pointers to a more meaningful name'
 (Maxime Ripard, 8 Oct 2025), 'state' is renamed to 'state_to_destroy'.
