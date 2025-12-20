@@ -1,7 +1,8 @@
 # Test the build against a bleeding-edge kernel
 FROM registry.fedoraproject.org/fedora:rawhide
 
-RUN dnf -y update \
+RUN dnf -y copr enable @kernel-vanilla/mainline \
+    && dnf -y update \
     && dnf -y install --setopt=install_weak_deps=False \
         wget \
         gcc make patch \
