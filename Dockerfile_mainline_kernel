@@ -1,4 +1,4 @@
-# Test the build against a bleeding-edge kernel
+# Test the build against the latest mainline kernel
 FROM registry.fedoraproject.org/fedora:rawhide
 
 RUN dnf -y copr enable @kernel-vanilla/mainline \
