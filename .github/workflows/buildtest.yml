@@ -16,17 +16,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download NVIDIA driver
-        run: ./download
-
-      - name: Build image with the ${{ matrix.kernel }} kernel
-        run: |
-          docker build -f Dockerfile_${{ matrix.kernel }}_kernel -t nvidia-470xx-${{ matrix.kernel }} .
-
       - name: Build against the ${{ matrix.kernel }} kernel
-        run: |
-          docker run --network none --rm nvidia-470xx-${{ matrix.kernel }}
+        run: make test-${{ matrix.kernel }}
 
       - name: Build against the ${{ matrix.kernel }} kernel with staging patches
-        run: |
-          docker run --network none --rm --env NVIDIA_470XX_APPLY_STAGING_PATCHES=1 nvidia-470xx-${{ matrix.kernel }}
+        run: make test-${{ matrix.kernel }}-staging
