@@ -1,5 +1,5 @@
 # Test the build against a bleeding-edge kernel
-FROM registry.fedoraproject.org/fedora:rawhide
+FROM registry.fedoraproject.org/fedora:latest
 
 RUN dnf -y copr enable @kernel-vanilla/stable \
     && dnf -y update \
