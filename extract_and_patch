@@ -27,6 +27,6 @@ apply_patch nvidia-470xx-fix-linux-6.17.patch
 apply_patch nvidia-470xx-fix-linux-6.19-part1.patch
 apply_patch nvidia-470xx-fix-linux-6.19-part2.patch
 if [ -n "${NVIDIA_470XX_APPLY_STAGING_PATCHES:-}" ]; then
-    apply_patch staging/nvidia-470xx-fix-linux-next.patch
+    apply_patch staging/nvidia-470xx-fix-linux-7.0.patch
 fi
 apply_patch enable-drm-modeset-by-default.patch
