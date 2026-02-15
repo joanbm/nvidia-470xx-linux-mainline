@@ -17,7 +17,7 @@ index e095a89..2ab5074 100644
  
  #include <linux/fb.h>               /* fb_info struct                   */
  #include <linux/screen_info.h>      /* screen_info                      */
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7, 0, 0)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 20, 0)
 +#include <linux/sysfb.h>            /* sysfb_primary_display            */
 +#endif
  
@@ -51,7 +51,7 @@ index 57b5024..ef7dde6 100644
       * After commit b8466fe82b79 ("efi: move screen_info into efi init code")
       * in v6.7, 'screen_info' is exported as GPL licensed symbol for ARM64.
       */
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7, 0, 0)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 20, 0)
 +    // Rel. commit "sysfb: Replace screen_info with sysfb_primary_display" (Thomas Zimmermann, 26 Nov 2025)
 +    const struct screen_info *si = &sysfb_primary_display.screen;
 +#elif NV_CHECK_EXPORT_SYMBOL(screen_info)
@@ -59,7 +59,7 @@ index 57b5024..ef7dde6 100644
 +#endif
  
 -#if NV_CHECK_EXPORT_SYMBOL(screen_info)
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(7, 0, 0)) || \
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 20, 0)) || \
 +    NV_CHECK_EXPORT_SYMBOL(screen_info)
      /*
       * If there is not a framebuffer console, return 0 size.
