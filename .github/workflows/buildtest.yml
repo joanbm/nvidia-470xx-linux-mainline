@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        kernel: [legacy, stable, mainline]
+        kernel: [legacy, stable, mainline, ubuntu-devel]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

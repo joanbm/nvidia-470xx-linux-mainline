@@ -1,0 +1,19 @@
+# Test the build against the ubuntu:devel kernel config
+FROM docker.io/library/ubuntu:devel
+
+RUN export DEBIAN_FRONTEND=noninteractive \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        wget ca-certificates \
+        build-essential \
+        linux-headers-generic \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY . .
+
+ENV KERNEL_BASE_DIR=/lib/modules/*
+ENV SYSSRC=${KERNEL_BASE_DIR}/build
+
+CMD ["./buildtest"]
