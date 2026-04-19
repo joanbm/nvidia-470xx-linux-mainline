@@ -13,6 +13,8 @@ cd nvidia-470xx-linux-mainline
 ./install
 ```
 
+⚠️ Beware that some distro configurations no longer support X.org (e.g. Ubuntu 26.04 with GNOME), see [this issue](https://github.com/joanbm/nvidia-470xx-linux-mainline/issues/12#issuecomment-4276472117). You can use Xubuntu (XFCE) as an alternative.
+
 # Scripts
 
 * `./install`: Download the driver, apply the patches, and launch the installer.
