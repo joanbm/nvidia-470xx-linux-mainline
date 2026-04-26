@@ -14,7 +14,12 @@ WORKDIR /app
 
 COPY . .
 
-ENV KERNEL_BASE_DIR=/usr/src/kernels/*
-ENV SYSSRC=${KERNEL_BASE_DIR}
+# Create entrypoint script to set up kernel build paths
+RUN printf '%s\n' \
+    '#!/bin/sh' \
+    'KERNEL_BASE_DIR=$(echo /usr/src/kernels/*)' \
+    'SYSSRC=$KERNEL_BASE_DIR exec "$@"' \
+  > /entrypoint.sh && chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["./buildtest"]
