@@ -13,7 +13,7 @@ cd nvidia-470xx-linux-mainline
 ./install
 ```
 
-⚠️ Beware that some distro configurations no longer support X.org (e.g. Ubuntu 26.04 with GNOME), see [this issue](https://github.com/joanbm/nvidia-470xx-linux-mainline/issues/12#issuecomment-4276472117). You can use Xubuntu (XFCE) as an alternative.
+⚠️ Beware that GNOME 49+ (e.g. the default Ubuntu 26.04 desktop) has dropped X.org support. See [this issue](https://github.com/joanbm/nvidia-470xx-linux-mainline/issues/12#issuecomment-4276472117). You can use Xubuntu (XFCE) as an alternative.
 
 # Scripts
 
