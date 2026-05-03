@@ -13,7 +13,13 @@ cd nvidia-470xx-linux-mainline
 ./install
 ```
 
-⚠️ Beware that GNOME 49+ (e.g. the default Ubuntu 26.04 desktop) has dropped X.org support. See [this issue](https://github.com/joanbm/nvidia-470xx-linux-mainline/issues/12#issuecomment-4276472117). You can use Xubuntu (XFCE) as an alternative.
+# Desktop environment support
+
+* ⚠️ Beware that GNOME 49+ (e.g. the default Ubuntu 26.04 desktop) has dropped X.org support.
+* ⚠️ [KDE Plasma 6.8+ will drop X.org support.](https://blogs.kde.org/2025/11/26/going-all-in-on-a-wayland-future/). In Ubuntu 26.04, you must install `plasma-x11-session` separately.
+* XFCE, LXDE, i3, etc. still support X.org.
+
+See [this issue](https://github.com/joanbm/nvidia-470xx-linux-mainline/issues/12#issuecomment-4276472117) for further detail.
 
 # Scripts
 
