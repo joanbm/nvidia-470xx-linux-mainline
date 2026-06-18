@@ -1,29 +1,34 @@
-From c7ab41d4723daff512958a686d30d470d1c050d5 Mon Sep 17 00:00:00 2001
+From f14564b1e54b29ecc3f835007449790169750811 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Joan=20Bruguera=20Mic=C3=B3?= <joanbrugueram@gmail.com>
-Date: Sat, 9 May 2026 08:30:22 +0000
-Subject: [PATCH 1/2] Tentative fix for NVIDIA 470.256.02 driver for
- Linux-next-20260508 (part 1: drm_atomic_state -> drm_atomic_commit rename)
+Date: Thu, 18 Jun 2026 05:51:38 +0000
+Subject: [PATCH 1/2] Tentative fix for NVIDIA 470.256.02 driver for Linux
+ 7.2-rc1 (part 1)
 
-Created using:
+Rename drm_atomic_state -> drm_atomic_commit rename; created using:
 
-rg -l drm_atomic_state | \
-        xargs sed -i 's/drm_atomic_state/drm_atomic_commit/g; s/drm_atomic_commit_helper/drm_atomic_state_helper/g'
-
-Plus a few trivial manual edits.
+rg -l atomic_state | xargs sed -i 's/atomic_state/atomic_commit/g; s/ATOMIC_STATE/ATOMIC_COMMIT/g; s/atomic_commit_alloc/atomic_state_alloc/g; s/atomic_commit_clear/atomic_state_clear/g; s/atomic_commit_free/atomic_state_free/g;'
 ---
- conftest.sh                     | 42 ++++++++++++++++-----------------
- nvidia-drm/nvidia-drm-crtc.c    | 12 +++++-----
- nvidia-drm/nvidia-drm-drv.c     |  6 ++---
- nvidia-drm/nvidia-drm-modeset.c | 40 +++++++++++++++----------------
- nvidia-drm/nvidia-drm-modeset.h | 12 +++++-----
+ conftest.sh                     | 46 ++++++++++++++++-----------------
+ nvidia-drm/nvidia-drm-crtc.c    | 12 ++++-----
+ nvidia-drm/nvidia-drm-modeset.c | 38 +++++++++++++--------------
+ nvidia-drm/nvidia-drm-modeset.h | 12 ++++-----
  nvidia-drm/nvidia-drm.Kbuild    |  6 ++---
- 6 files changed, 59 insertions(+), 59 deletions(-)
+ 5 files changed, 57 insertions(+), 57 deletions(-)
 
 diff --git a/conftest.sh b/conftest.sh
-index 294d6e5..44d101b 100755
+index 294d6e5..07e821e 100755
 --- a/conftest.sh
 +++ b/conftest.sh
-@@ -3010,9 +3010,9 @@ compile_test() {
+@@ -1927,7 +1927,7 @@ compile_test() {
+             # Determine if the DRM atomic modesetting subsystem is usable
+             #
+             # Added by commit 036ef5733ba4
+-            # ("drm/atomic: Allow drivers to subclass drm_atomic_state, v3") in
++            # ("drm/atomic: Allow drivers to subclass drm_atomic_commit, v3") in
+             # v4.2 (2018-05-18).
+             #
+             # Make conftest more robust by adding test for
+@@ -3010,23 +3010,23 @@ compile_test() {
              compile_check_conftest "$CODE" "NV_DRM_MASTER_DROP_HAS_FROM_RELEASE_ARG" "" "types"
          ;;
  
@@ -35,7 +40,10 @@ index 294d6e5..44d101b 100755
              # present.
              #
              # Added by commit 0853695c3ba4 ("drm: Add reference counting to
-@@ -3022,11 +3022,11 @@ compile_test() {
+-            # drm_atomic_state") in v4.10 (2016-10-14)
++            # drm_atomic_commit") in v4.10 (2016-10-14)
+             #
+             CODE="
              #if defined(NV_DRM_DRM_ATOMIC_H_PRESENT)
              #include <drm/drm_atomic.h>
              #endif
@@ -188,25 +196,8 @@ index 69db1cb..c74f168 100644
      struct drm_crtc_state *crtc_state =
          drm_atomic_get_new_crtc_state(state, crtc);
  #endif
-diff --git a/nvidia-drm/nvidia-drm-drv.c b/nvidia-drm/nvidia-drm-drv.c
-index 1b6e2be..95102a9 100644
---- a/nvidia-drm/nvidia-drm-drv.c
-+++ b/nvidia-drm/nvidia-drm-drv.c
-@@ -175,9 +175,9 @@ static struct drm_framebuffer *nv_drm_framebuffer_create(
- static const struct drm_mode_config_funcs nv_mode_config_funcs = {
-     .fb_create = nv_drm_framebuffer_create,
- 
--    .atomic_state_alloc = nv_drm_atomic_state_alloc,
--    .atomic_state_clear = nv_drm_atomic_state_clear,
--    .atomic_state_free  = nv_drm_atomic_state_free,
-+    .atomic_state_alloc = nv_drm_atomic_commit_alloc,
-+    .atomic_state_clear = nv_drm_atomic_commit_clear,
-+    .atomic_state_free  = nv_drm_atomic_commit_free,
-     .atomic_check  = nv_drm_atomic_check,
-     .atomic_commit = nv_drm_atomic_commit,
- 
 diff --git a/nvidia-drm/nvidia-drm-modeset.c b/nvidia-drm/nvidia-drm-modeset.c
-index 640b341..2e846c5 100644
+index 640b341..28e30ee 100644
 --- a/nvidia-drm/nvidia-drm-modeset.c
 +++ b/nvidia-drm/nvidia-drm-modeset.c
 @@ -42,23 +42,23 @@
@@ -230,7 +221,7 @@ index 640b341..2e846c5 100644
  }
  
 -struct drm_atomic_state *nv_drm_atomic_state_alloc(struct drm_device *dev)
-+struct drm_atomic_commit *nv_drm_atomic_commit_alloc(struct drm_device *dev)
++struct drm_atomic_commit *nv_drm_atomic_state_alloc(struct drm_device *dev)
  {
 -    struct nv_drm_atomic_state *nv_state =
 +    struct nv_drm_atomic_commit *nv_state =
@@ -246,14 +237,14 @@ index 640b341..2e846c5 100644
  }
  
 -void nv_drm_atomic_state_clear(struct drm_atomic_state *state)
-+void nv_drm_atomic_commit_clear(struct drm_atomic_commit *state)
++void nv_drm_atomic_state_clear(struct drm_atomic_commit *state)
  {
 -    drm_atomic_state_default_clear(state);
 +    drm_atomic_commit_default_clear(state);
  }
  
 -void nv_drm_atomic_state_free(struct drm_atomic_state *state)
-+void nv_drm_atomic_commit_free(struct drm_atomic_commit *state)
++void nv_drm_atomic_state_free(struct drm_atomic_commit *state)
  {
 -    struct nv_drm_atomic_state *nv_state =
 -                    to_nv_atomic_state(state);
@@ -297,7 +288,7 @@ index 640b341..2e846c5 100644
                           bool nonblock)
  {
      int ret = -EBUSY;
-@@ -571,13 +571,13 @@ int nv_drm_atomic_commit(struct drm_device *dev,
+@@ -571,7 +571,7 @@ int nv_drm_atomic_commit(struct drm_device *dev,
  
  done:
  
@@ -306,15 +297,8 @@ index 640b341..2e846c5 100644
      /*
       * If ref counting is present, state will be freed when the caller
       * drops its reference after we return.
-      */
- #else
--    drm_atomic_state_free(state);
-+    drm_atomic_commit_free(state);
- #endif
- 
-     return 0;
 diff --git a/nvidia-drm/nvidia-drm-modeset.h b/nvidia-drm/nvidia-drm-modeset.h
-index 8cf25ad..cd6034a 100644
+index 8cf25ad..6b7e759 100644
 --- a/nvidia-drm/nvidia-drm-modeset.h
 +++ b/nvidia-drm/nvidia-drm-modeset.h
 @@ -30,17 +30,17 @@
@@ -327,9 +311,9 @@ index 8cf25ad..cd6034a 100644
 -struct drm_atomic_state *nv_drm_atomic_state_alloc(struct drm_device *dev);
 -void nv_drm_atomic_state_clear(struct drm_atomic_state *state);
 -void nv_drm_atomic_state_free(struct drm_atomic_state *state);
-+struct drm_atomic_commit *nv_drm_atomic_commit_alloc(struct drm_device *dev);
-+void nv_drm_atomic_commit_clear(struct drm_atomic_commit *state);
-+void nv_drm_atomic_commit_free(struct drm_atomic_commit *state);
++struct drm_atomic_commit *nv_drm_atomic_state_alloc(struct drm_device *dev);
++void nv_drm_atomic_state_clear(struct drm_atomic_commit *state);
++void nv_drm_atomic_state_free(struct drm_atomic_commit *state);
  
  int nv_drm_atomic_check(struct drm_device *dev,
 -                        struct drm_atomic_state *state);
