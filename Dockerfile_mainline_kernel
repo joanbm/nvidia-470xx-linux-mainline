@@ -2,7 +2,7 @@
 FROM registry.fedoraproject.org/fedora:rawhide
 
 RUN dnf -y copr enable @kernel-vanilla/mainline \
-    && dnf -y update \
+    && dnf -y update --allowerasing \
     && dnf -y install --setopt=install_weak_deps=False \
         wget \
         gcc make patch \
