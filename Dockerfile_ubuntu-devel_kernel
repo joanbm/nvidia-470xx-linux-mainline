@@ -13,6 +13,9 @@ WORKDIR /app
 
 COPY . .
 
+# gcc and linux may not always be fully aligned on ubuntu:devel
+ENV IGNORE_CC_MISMATCH=1
+
 # Create entrypoint script to set up kernel build paths
 RUN printf '%s\n' \
     '#!/bin/sh' \
