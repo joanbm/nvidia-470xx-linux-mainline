@@ -14,7 +14,8 @@ RUN echo "$0: setting up repo file..." \
    && wget -O /etc/yum.repos.d/cuda-rhel8.repo http://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo \
    && ls -al /etc/yum.repos.d/cuda-rhel8.repo \
    && dnf list nvidia-driver-cuda \
-   && dnf module install nvidia-driver:470-dkms
+   && dnf -y --enablerepo=cuda-rhel8-x86_64 module list nvidia-driver \
+   && dnf -y --enablerepo=cuda-rhel8-x86_64 module install nvidia-driver:470-dkms
 
 RUN dnf clean all \
     && rm -rf /var/cache/dnf
