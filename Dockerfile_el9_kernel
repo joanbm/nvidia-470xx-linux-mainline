@@ -1,0 +1,34 @@
+# Test the build against the EL9.8's kernel
+# https://github.com/orgs/AlmaLinux/packages/container/package/9-base
+FROM ghcr.io/almalinux/9-base:9.8
+
+RUN dnf -y update --allowerasing \
+    && dnf -y install --setopt=install_weak_deps=False \
+        wget \
+        gcc make patch \
+        kernel-devel
+
+# We take el8 driver first via dnf before patching
+RUN echo "$0: setting up repo file..." \
+   && date \
+   && wget -O /etc/yum.repos.d/cuda-rhel8.repo http://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo \
+   && ls -al /etc/yum.repos.d/cuda-rhel8.repo \
+   && dnf list nvidia-driver-cuda \
+   && dnf module install nvidia-driver:470-dkms
+
+RUN dnf clean all \
+    && rm -rf /var/cache/dnf
+
+WORKDIR /app
+
+COPY . .
+
+# Create entrypoint script to set up kernel build paths
+RUN printf '%s\n' \
+    '#!/bin/sh' \
+    'KERNEL_BASE_DIR=$(echo /usr/src/kernels/*)' \
+    'SYSSRC=$KERNEL_BASE_DIR exec "$@"' \
+  > /entrypoint.sh && chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
+CMD ["echo ./el9-buildtest TODO"]
