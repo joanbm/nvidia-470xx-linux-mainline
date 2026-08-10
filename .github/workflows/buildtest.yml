@@ -2,7 +2,7 @@ name: Build test NVIDIA driver patches
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, el9 ]
   pull_request:
   workflow_dispatch:
 
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        kernel: [legacy, stable, mainline, ubuntu-devel]
+        kernel: [legacy, stable, mainline, ubuntu-devel, el9]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
