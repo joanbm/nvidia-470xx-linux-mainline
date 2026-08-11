@@ -12,6 +12,9 @@ git clone https://github.com/joanbm/nvidia-470xx-linux-mainline
 cd nvidia-470xx-linux-mainline
 ./install
 ```
+# EL9 (RedHat, Alma, Rocky and derivatives)
+
+* See the [Docerfile](./Dockerfile_el9_kernel) and [a dedicated folder](./el9/)
 
 # Desktop environment support
 
