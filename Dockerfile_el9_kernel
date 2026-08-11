@@ -7,8 +7,8 @@ RUN dnf -y update --allowerasing \
         wget \
         gcc make patch \
         kernel-devel kernel-headers \
-    && ls -al /lib/modules/ \
-    && ls -al /lib/modules/$(shell uname -r)/
+    && ln -s /usr/src/kernels/* /lib/modules/$(uname -r)/build \
+    && ls -al /lib/modules/ & ls -al /usr/src/kernels/
 
 # We take el8 driver first via dnf before patching
 # dnf-plugin-nvidia; however, comes from el9
@@ -25,6 +25,7 @@ RUN echo "$0: setting up repo file..." \
    && dnf -y --enablerepo=cuda-rhel8-x86_64,epel install dkms nvidia-driver nvidia-driver-cuda
 
 RUN dnf clean all \
+    && ls -al /lib/modules/
     && rm -rf /var/cache/dnf
 
 WORKDIR /app
