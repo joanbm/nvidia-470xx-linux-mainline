@@ -10,7 +10,7 @@ apply_patch() {
 
 cd /usr/src/nvidia-470.256.02/
 pwd
-echp "$0: SCRIPTPATH=$SCRIPTPATH"
+echo "$0: SCRIPTPATH=$SCRIPTPATH"
 apply_patch el9_7.patch
 apply_patch el9_8.patch
 
