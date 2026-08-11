@@ -6,7 +6,9 @@ RUN dnf -y update --allowerasing \
     && dnf -y install --setopt=install_weak_deps=False \
         wget \
         gcc make patch \
-        kernel-devel
+        kernel-devel kernel-headers \
+    && ls -al /lib/modules/ \
+    && ls -al /lib/modules/$(shell uname -r)/
 
 # We take el8 driver first via dnf before patching
 # dnf-plugin-nvidia; however, comes from el9
