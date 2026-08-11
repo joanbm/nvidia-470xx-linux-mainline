@@ -43,11 +43,14 @@ pushd el9/nvidia-pfn-shim-1.0
 popd
 
 # The main driver
-echo "Patching and installing the driver..."
+echo "Patching the driver..."
 date
 ./el9-patch
-dkms build -m nvidia -v 470.256.02
-dkms install -m nvidia -v 470.256.02
+
+echo "DKMS-building and installing the driver for $TARGET_KERNEL..."
+date
+dkms build -m nvidia -v 470.256.02 -k $TARGET_KERNEL
+dkms install -m nvidia -v 470.256.02 -k $TARGET_KERNEL
 
 echo "$0: DONE"
 date
