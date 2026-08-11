@@ -8,7 +8,7 @@ RUN dnf -y update --allowerasing \
         gcc make patch \
         kernel-devel kernel-headers \
     && ln -s /usr/src/kernels/* /lib/modules/$(uname -r)/build \
-    && ls -al /lib/modules/ & ls -al /usr/src/kernels/
+    && ls -al /lib/modules/ && ls -al /usr/src/kernels/
 
 # We take el8 driver first via dnf before patching
 # dnf-plugin-nvidia; however, comes from el9
