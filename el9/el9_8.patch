@@ -6,9 +6,9 @@ Subject: [PATCH] Add a diff between EL9.7 and EL9.8 for 470.256.02
 EL9.8's kernels saw drm_format_info *info field added; reflect
 this in the patch to make it compile again.
 ---
-diff -ru nvidia-drm/nvidia-drm-drv.c /usr/src/nvidia-470.256.02/nvidia-drm/nvidia-drm-drv.c
---- nvidia-drm/nvidia-drm-drv.c	2026-08-03 13:07:17.800664831 -0400
-+++ /usr/src/nvidia-470.256.02/nvidia-drm/nvidia-drm-drv.c	2026-08-03 13:58:11.256287903 -0400
+diff -ru nvidia-470.256.02/nvidia-drm/nvidia-drm-drv.c /usr/src/nvidia-470.256.02/nvidia-drm/nvidia-drm-drv.c
+--- nvidia-470.256.02/nvidia-drm/nvidia-drm-drv.c	2026-08-03 13:07:17.800664831 -0400
++++ /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-drv.c	2026-08-03 13:58:11.256287903 -0400
 @@ -135,6 +135,7 @@
  static struct drm_framebuffer *nv_drm_framebuffer_create(
      struct drm_device *dev,
@@ -25,9 +25,9 @@ diff -ru nvidia-drm/nvidia-drm-drv.c /usr/src/nvidia-470.256.02/nvidia-drm/nvidi
              &local_cmd);
  
      #if !defined(NV_DRM_HELPER_MODE_FILL_FB_STRUCT_HAS_CONST_MODE_CMD_ARG)
-diff -ru /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-fb.c /usr/src/nvidia-470.256.02/nvidia-drm/nvidia-drm-fb.c
---- /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-fb.c	2026-08-03 13:07:17.800664831 -0400
-+++ /usr/src/nvidia-470.256.02/nvidia-drm/nvidia-drm-fb.c	2026-08-10 23:38:05.453016015 -0400
+diff -ru nvidia-470.256.02/nvidia-drm/nvidia-drm-fb.c /usr/src/nvidia-470.256.02/nvidia-drm/nvidia-drm-fb.c
+--- nvidia-470.256.02/nvidia-drm/nvidia-drm-fb.c	2026-08-03 13:07:17.800664831 -0400
++++ /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-fb.c	2026-08-10 23:38:05.453016015 -0400
 @@ -184,8 +184,10 @@
  struct drm_framebuffer *nv_drm_internal_framebuffer_create(
      struct drm_device *dev,
@@ -47,9 +47,9 @@ diff -ru /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-fb.
          cmd);
  
      /*
-diff -ru /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-fb.h /usr/src/nvidia-470.256.02/nvidia-drm/nvidia-drm-fb.h
---- /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-fb.h	2026-08-03 13:07:17.801664868 -0400
-+++ /usr/src/nvidia-470.256.02/nvidia-drm/nvidia-drm-fb.h	2026-08-03 13:52:38.826806450 -0400
+diff -ru nvidia-470.256.02/nvidia-drm/nvidia-drm-fb.h /usr/src/nvidia-470.256.02/nvidia-drm/nvidia-drm-fb.h
+--- nvidia-470.256.02/nvidia-drm/nvidia-drm-fb.h	2026-08-03 13:07:17.801664868 -0400
++++ /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-fb.h	2026-08-03 13:52:38.826806450 -0400
 @@ -59,6 +59,7 @@
  struct drm_framebuffer *nv_drm_internal_framebuffer_create(
      struct drm_device *dev,
