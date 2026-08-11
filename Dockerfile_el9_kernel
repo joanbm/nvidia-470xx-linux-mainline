@@ -23,7 +23,7 @@ RUN echo "$0: setting up NVIDIA repo files..." \
 RUN echo "$0: installing epel ..." \
    && dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 
-RUN echo "$0: installing default NVIDIA 470-dkms packages..."
+RUN echo "$0: installing default NVIDIA 470-dkms packages..." \
    && dnf list --enablerepo=cuda-rhel8-x86_64 nvidia-driver-cuda \
    && dnf -y --enablerepo=cuda-rhel9-x86_64 install dnf-plugin-nvidia \
    && dnf -y --enablerepo=cuda-rhel8-x86_64 module list nvidia-driver \
