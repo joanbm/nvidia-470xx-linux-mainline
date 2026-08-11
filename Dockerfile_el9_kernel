@@ -46,4 +46,4 @@ RUN printf '%s\n' \
   > /entrypoint.sh && chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["./el9-buildtest"]
+CMD ["./el9/buildtest"]
