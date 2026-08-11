@@ -8,6 +8,11 @@ apply_patch() {
     patch -Np1 -i "$SCRIPTPATH/el9/$1"
 }
 
-cd /usr/src/nvidia-470.256.02/source
+cd /usr/src/nvidia-470.256.02/
+pwd
+echp "$0: SCRIPTPATH=$SCRIPTPATH"
 apply_patch el9_7.patch
 apply_patch el9_8.patch
+
+echo "$0: DONE"
+date
