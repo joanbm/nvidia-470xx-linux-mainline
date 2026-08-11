@@ -14,7 +14,7 @@ cd nvidia-470xx-linux-mainline
 ```
 # EL9 (RedHat, Alma, Rocky and derivatives)
 
-* See the [Docerfile](./Dockerfile_el9_kernel) and [a dedicated folder](./el9/)
+* See the [Dockerfile](./Dockerfile_el9_kernel) and [a dedicated folder](./el9/)
 
 # Desktop environment support
 
