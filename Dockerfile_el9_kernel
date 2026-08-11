@@ -7,7 +7,9 @@ RUN dnf -y update --allowerasing \
         wget \
         gcc make patch \
         kernel-devel kernel-headers \
-    && ln -s /usr/src/kernels/* /lib/modules/$(uname -r)/build \
+    && KERNEL_VER=$(rpm -q --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}\n' kernel-devel) \
+    && mkdir -p /lib/modules/${KERNEL_VER} \
+    && ln -s /usr/src/kernels/* /lib/modules/${KERNEL_VER}/build \
     && ls -al /lib/modules/ && ls -al /usr/src/kernels/
 
 # We take el8 driver first via dnf before patching
