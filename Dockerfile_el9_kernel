@@ -27,7 +27,7 @@ RUN echo "$0: setting up repo file..." \
    && dnf -y --enablerepo=cuda-rhel8-x86_64,epel install dkms nvidia-driver nvidia-driver-cuda
 
 RUN dnf clean all \
-    && ls -al /lib/modules/
+    && ls -al /lib/modules/ \
     && rm -rf /var/cache/dnf
 
 WORKDIR /app
