@@ -18,7 +18,7 @@ fi
 # We need the shim before we build the driver:
 echo "Compiling and installing shim..."
 date
-pushd nvidia-pfn-shim-1.0
+pushd el9/nvidia-pfn-shim-1.0
   # Override KDIR if building inside the container environment
   if [ -d "/usr/src/kernels/$TARGET_KERNEL" ] && [ ! -d "/lib/modules/$(uname -r)/build" ]; then
     export KDIR="/usr/src/kernels/$TARGET_KERNEL"
@@ -45,7 +45,7 @@ popd
 # The main driver
 echo "Patching the driver..."
 date
-./patch
+./el9/patch
 
 echo "DKMS-building and installing the driver for $TARGET_KERNEL..."
 date
