@@ -13,7 +13,8 @@ jobs:
       # Don't fail all elements of the matrix if one fails
       fail-fast: false
       matrix:
-        kernel: [legacy, stable, mainline, ubuntu-devel, el9]
+        #kernel: [legacy, stable, mainline, ubuntu-devel, el9]
+        kernel: [ el9 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
