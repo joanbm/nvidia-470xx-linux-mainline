@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+set -eu
+
+[ "$#" -ne 0 ] && { echo "No arguments expected" >&2; exit 1; }
+
+SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+apply_patch() {
+    patch -Np1 -i "$SCRIPTPATH/el9/$1"
+}
+
+cd /usr/src/nvidia-470.256.02/source
+apply_patch el9_7.patch
+apply_patch el9_8.patch

@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+set -eu
+
+[ "$#" -ne 0 ] && { echo "No arguments expected" >&2; exit 1; }
+
+# We need the shim before we build the driver:
+echo "Compiling and installing shim..."
+date
+pushd el9/nvidia-pfn-shim-1.0
+  make
+  install -D -m 644 nvidia-pfn-shim.ko /lib/modules/$(uname -r)/extra/nvidia-pfn-shim.ko
+  nm -n nvidia-pfn-shim.ko
+  modinfo nvidia-pfn-shim.ko
+  cp Module.symvers /usr/src/nvidia-470.256.02/
+popd
+
+# The main driver
+echo "Patching and installing the driver..."
+date
+./el9-patch
+dkms build -m nvidia -v 470.256.02
+dkms install -m nvidia -v 470.256.02
+
+echo "$0: DONE"
+date
