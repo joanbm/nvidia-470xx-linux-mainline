@@ -37,4 +37,4 @@ RUN printf '%s\n' \
   > /entrypoint.sh && chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["echo ./el9-buildtest TODO"]
+CMD ["./el9-buildtest"]
