@@ -6,8 +6,8 @@ Subject: [PATCH] Add a diff between EL9.7 and EL9.8 for 470.256.02
 EL9.8's kernels saw drm_format_info *info field added; reflect
 this in the patch to make it compile again.
 ---
-diff -ru /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-drv.c /usr/src/nvidia-470.256.02/nvidia-drm/nvidia-drm-drv.c
---- /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-drv.c	2026-08-03 13:07:17.800664831 -0400
+diff -ru nvidia-drm/nvidia-drm-drv.c /usr/src/nvidia-470.256.02/nvidia-drm/nvidia-drm-drv.c
+--- nvidia-drm/nvidia-drm-drv.c	2026-08-03 13:07:17.800664831 -0400
 +++ /usr/src/nvidia-470.256.02/nvidia-drm/nvidia-drm-drv.c	2026-08-03 13:58:11.256287903 -0400
 @@ -135,6 +135,7 @@
  static struct drm_framebuffer *nv_drm_framebuffer_create(
