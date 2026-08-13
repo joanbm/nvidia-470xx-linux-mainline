@@ -6,7 +6,14 @@ set -eu
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 apply_patch() {
     echo "Applying $1 ... at [$SCRIPTPATH/$1]"
-    patch -Np1 -i "$SCRIPTPATH/$1"
+
+    if patch -Np1 -R --dry-run -i "$SCRIPTPATH/$1" >/dev/null 2>&1; then
+      echo "Status: Patch HAS ALREADY been applied."
+    else
+      echo "Status: Patch has not been applied yet."
+      patch -Np1 -i "$SCRIPTPATH/$1"
+    fi
+
     echo "Done with $1"
 }
 
