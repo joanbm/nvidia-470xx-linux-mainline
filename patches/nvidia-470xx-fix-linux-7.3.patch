@@ -1,8 +1,7 @@
 From 98f927ae8b5720a680fe26f1c845330ad175783f Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Joan=20Bruguera=20Mic=C3=B3?= <joanbrugueram@gmail.com>
 Date: Sun, 12 Jul 2026 15:45:19 +0000
-Subject: [PATCH] Tentative fix for NVIDIA 470.256.02 driver for Linux
- Next-20260710
+Subject: [PATCH] Tentative fix for NVIDIA 470.256.02 driver for Linux 7.3-rc1
 
 ---
  nvidia/nv-acpi.c | 26 ++++++++++++++++++++++++++
@@ -17,7 +16,7 @@ index 0d11845..eb82b1d 100644
  static NV_STATUS   nv_acpi_extract_object  (const union acpi_object *, void *, NvU32, NvU32 *);
  
 +// Rel. commit "ACPI: bus: Eliminate struct acpi_driver" (Rafael J. Wysocki, 1 Jul 2026)
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(999, 0, 0)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(7, 3, 0)
  static int         nv_acpi_add             (struct acpi_device *);
  
  #if !defined(NV_ACPI_DEVICE_OPS_REMOVE_ARGUMENT_COUNT)
@@ -33,7 +32,7 @@ index 0d11845..eb82b1d 100644
  static NV_STATUS   nv_acpi_wmmx_method     (NvU32, NvU8 *, NvU16 *);
  
 +// Rel. commit "ACPI: bus: Eliminate struct acpi_driver" (Rafael J. Wysocki, 1 Jul 2026)
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(999, 0, 0)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(7, 3, 0)
  static const struct acpi_device_id nv_video_device_ids[] = {
      {
          .id          = ACPI_VIDEO_HID,
@@ -49,7 +48,7 @@ index 0d11845..eb82b1d 100644
  #define ACPI_VIDEO_CLASS    "video"
  #endif
  
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(999, 0, 0)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(7, 3, 0)
 +// Rel. commit "ACPI: bus: Eliminate struct acpi_driver" (Rafael J. Wysocki, 1 Jul 2026)
  static const struct acpi_driver nv_acpi_driver_template = {
      .name = "NVIDIA ACPI Video Driver",
@@ -66,7 +65,7 @@ index 0d11845..eb82b1d 100644
      unregister_acpi_notifier(&nvl->acpi_nb);
  }
  
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(999, 0, 0)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(7, 3, 0)
  int nv_acpi_init(void)
  {
      /*
