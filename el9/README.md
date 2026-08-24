@@ -22,7 +22,7 @@ We rely as much as possible on pre-built `dnf` `rpm` packages
 provided by the vendors and minimally patch after `dnf install`.
 
 NVIDIA's official repositories for EL9 discontinued the 470.x
-stream, so it's only available in EL9 repositories. We pre-install
+stream, so it's only available in EL8 repositories. We pre-install
 the driver and its components from those repositories first,
 then apply the patches to the installed sources `/usr/src/nvidia-470.256.02`.
 
