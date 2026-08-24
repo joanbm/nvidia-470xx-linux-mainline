@@ -1,0 +1,120 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Serguei Mokhov <mokhov@cse.concordia.ca>
+Date: Mon, 03 Aug 2026 13:07:17 -0400
+Subject: [PATCH] Add a diff between EL8 and EL9.7 for 470.256.02
+
+Module.symvers comes from the shim after shim's compilation
+to add wrapper symbols for nvidia_follow_pfnmap_start/end().
+Others are removals of symbols done in 6.x+ kernels backpored
+to 5.x by RedHat.
+
+---
+diff -ru nvidia-470.256.02/dkms.conf /nobackup/dkms-nvidia-470.256.02-el9_7_source/dkms.conf
+--- nvidia-470.256.02/dkms.conf	2024-05-02 16:13:30.000000000 -0400
++++ /nobackup/dkms-nvidia-470.256.02-el9_7_source/dkms.conf	2026-08-03 13:07:17.821665606 -0400
+@@ -2,7 +2,7 @@
+ PACKAGE_VERSION="470.256.02"
+ AUTOINSTALL="yes"
+ 
+-MAKE[0]="'make' -j2 module SYSSRC=${kernel_source_dir} IGNORE_XEN_PRESENCE=1 IGNORE_PREEMPT_RT_PRESENCE=1 IGNORE_CC_MISMATCH=1"
++MAKE[0]="'make' -j2 module KBUILD_EXTRA_SYMBOLS=/usr/src/nvidia-470.256.02/Module.symvers SYSSRC=${kernel_source_dir} IGNORE_XEN_PRESENCE=1 IGNORE_PREEMPT_RT_PRESENCE=1 IGNORE_CC_MISMATCH=1"
+ 
+ BUILT_MODULE_NAME[0]="nvidia"
+ DEST_MODULE_LOCATION[0]="/extra"
+diff -ru nvidia-470.256.02/nvidia/os-mlock.c /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia/os-mlock.c
+--- nvidia-470.256.02/nvidia/os-mlock.c	2024-05-02 16:13:30.000000000 -0400
++++ /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia/os-mlock.c	2026-08-03 13:07:17.800664831 -0400
+@@ -13,15 +13,55 @@
+ #include "os-interface.h"
+ #include "nv-linux.h"
+ 
++extern int nvidia_follow_pfnmap_start(
++    struct follow_pfnmap_args *args);
++
++extern void nvidia_follow_pfnmap_end(
++    struct follow_pfnmap_args *args);
++
+ static inline int nv_follow_pfn(struct vm_area_struct *vma,
+                                 unsigned long address,
+                                 unsigned long *pfn)
+ {
++/*
+ #if defined(NV_UNSAFE_FOLLOW_PFN_PRESENT)
+     return unsafe_follow_pfn(vma, address, pfn);
+ #else
+     return follow_pfn(vma, address, pfn);
+ #endif
++*/
++/*
++    struct follow_pfnmap_args args = {
++        .vma = vma,
++        .address = address,
++    };
++
++    int ret = follow_pfnmap_start(&args);
++    if (ret)
++        return ret;
++
++    *pfn = args.pfn;
++
++    follow_pfnmap_end(&args);
++
++    return 0;
++*/
++
++    struct follow_pfnmap_args args = {
++        .vma = vma,
++        .address = address,
++    };
++
++    int ret;
++
++    ret = nvidia_follow_pfnmap_start(&args);
++
++    if (ret == 0)
++        *pfn = args.pfn;
++
++    nvidia_follow_pfnmap_end(&args);
++
++    return ret;
+ }
+ 
+ /*!
+diff -ru nvidia-470.256.02/nvidia-drm/nvidia-drm-connector.c /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-connector.c
+--- nvidia-470.256.02/nvidia-drm/nvidia-drm-connector.c	2024-05-02 16:13:30.000000000 -0400
++++ /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-connector.c	2026-08-03 13:07:17.802664905 -0400
+@@ -302,8 +302,13 @@
+     return count;
+ }
+ 
++/*
+ static int nv_drm_connector_mode_valid(struct drm_connector    *connector,
+                                        struct drm_display_mode *mode)
++*/
++static enum drm_mode_status nv_drm_connector_mode_valid(
++                                struct drm_connector *connector,
++                                const struct drm_display_mode *mode)
+ {
+     struct drm_device *dev = connector->dev;
+     struct nv_drm_device *nv_dev = to_nv_device(dev);
+diff -ru nvidia-470.256.02/nvidia-drm/nvidia-drm-drv.c /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-drv.c
+--- nvidia-470.256.02/nvidia-drm/nvidia-drm-drv.c	2024-05-02 16:13:30.000000000 -0400
++++ /nobackup/dkms-nvidia-470.256.02-el9_7_source/nvidia-drm/nvidia-drm-drv.c	2026-08-03 13:07:17.800664831 -0400
+@@ -168,7 +168,7 @@
+     .atomic_check  = nv_drm_atomic_check,
+     .atomic_commit = nv_drm_atomic_commit,
+ 
+-    .output_poll_changed = nv_drm_output_poll_changed,
++    /*.output_poll_changed = nv_drm_output_poll_changed,*/
+ };
+ 
+ static void nv_drm_event_callback(const struct NvKmsKapiEvent *event)
+@@ -868,7 +868,7 @@
+     .name                   = "nvidia-drm",
+ 
+     .desc                   = "NVIDIA DRM driver",
+-    .date                   = "20160202",
++    /*.date                   = "20160202",*/
+ 
+ #if defined(NV_DRM_DRIVER_HAS_DEVICE_LIST)
+     .device_list            = LIST_HEAD_INIT(nv_drm_driver.device_list),
