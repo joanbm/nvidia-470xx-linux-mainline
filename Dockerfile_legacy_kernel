@@ -1,5 +1,5 @@
 # Test the build against a legacy kernel
-FROM docker.io/library/debian:oldoldstable
+FROM docker.io/library/debian:oldstable
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update \
