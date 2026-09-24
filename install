@@ -8,7 +8,7 @@ elif command -v doas >/dev/null 2>&1; then
 elif command -v sudo >/dev/null 2>&1; then
     ASROOT=sudo
 else
-    echo "Please install doas or sudo, one or this script as root" >&2
+    echo "Please install doas or sudo, or this script as root" >&2
     exit 1
 fi
 
