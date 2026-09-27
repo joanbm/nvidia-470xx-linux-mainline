@@ -13,7 +13,9 @@ cd nvidia-470xx-linux-mainline
 ./install
 ```
 
-# Desktop environment support
+# Troubleshooting and tips
+
+## Desktop environment support
 
 * ⚠️ Beware that GNOME 49+ (e.g. the default Ubuntu 26.04 desktop) has dropped X.org support.
 * ⚠️ [KDE Plasma 6.8+ will drop X.org support](https://blogs.kde.org/2025/11/26/going-all-in-on-a-wayland-future/). In Ubuntu 26.04, you must install `plasma-session-x11` separately.
@@ -21,19 +23,12 @@ cd nvidia-470xx-linux-mainline
 
 See [this issue](https://github.com/joanbm/nvidia-470xx-linux-mainline/issues/12#issuecomment-4276472117) for further detail.
 
-# Installation tips
+## Installation tips
 
 * You need to stop X.org to install the driver. To do this, run `systemctl isolate multi-user.target`, then log into a TTY and run the installer from there. Then reboot to re-start X.org.
 * During installation, you will be asked if you want to use DKMS. It is recommended that you say "Yes", so that the driver is automatically re-compiled when the Linux kernel is updated.
 
-# Scripts
-
-* `./install`: Download the driver, apply the patches, and launch the installer.
-* `./buildtest`: Download the driver, apply the patches, and build the kernel driver. For development.
-* `./download`: Download the driver from the NVIDIA website.
-* `./extract_and_patch`: Extract the driver and apply the patches, and nothing else. For development.
-
-# Kernel parameters
+## Disable open source drivers
 
 If once the driver is installed, you run into conflicts with Nouveau or NOVA, run the following command to blacklist the module:
 
@@ -46,6 +41,13 @@ END
 ```
 
 Or, you can add the following parameters to your kernel command line: `module_blacklist=nouveau,nova_core,nova_drm`
+
+# Other scripts
+
+* `./install`: Download the driver, apply the patches, and launch the installer.
+* `./buildtest`: Download the driver, apply the patches, and build the kernel driver. For development.
+* `./download`: Download the driver from the NVIDIA website.
+* `./extract_and_patch`: Extract the driver and apply the patches, and nothing else. For development.
 
 # Disclaimer
 
