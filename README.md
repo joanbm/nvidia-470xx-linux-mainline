@@ -21,6 +21,11 @@ cd nvidia-470xx-linux-mainline
 
 See [this issue](https://github.com/joanbm/nvidia-470xx-linux-mainline/issues/12#issuecomment-4276472117) for further detail.
 
+# Installation tips
+
+* You need to stop X.org to install the driver. This can typically be done by running `systemctl isolate multi-user.target`, then logging into a TTY and running the installer from there. Afterwards, rebooting will re-start X.org.
+* During installation, you will be asked if you want to use DKMS. It is recommended that you say "Yes", so that the driver is automatically re-compiled when the Linux kernel is updated.
+
 # Scripts
 
 * `./install`: Download the driver, apply the patches, and launch the installer.
