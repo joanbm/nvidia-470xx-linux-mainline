@@ -10,7 +10,7 @@ This repository is roughly aligned with the [Arch Linux User Repository nvidia-4
 sudo apt install git wget build-essential linux-headers-generic libglvnd-dev dkms
 git clone https://github.com/joanbm/nvidia-470xx-linux-mainline
 cd nvidia-470xx-linux-mainline
-./install
+./install --dkms
 ```
 
 # Troubleshooting and tips
