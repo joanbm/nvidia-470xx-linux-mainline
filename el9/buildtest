@@ -1,0 +1,56 @@
+#!/usr/bin/env sh
+set -eu
+
+[ "$#" -ne 0 ] && { echo "No arguments expected" >&2; exit 1; }
+
+# Containers don't have /lib/modules as a rule since they
+# rely on host's kernel.
+#
+# Determine the actual kernel version being targeted
+if [ -d "/lib/modules/$(uname -r)" ]; then
+  # Standard host path exists
+  TARGET_KERNEL=$(uname -r)
+else
+  # Container fallback: extract the directory name from the installed headers
+  TARGET_KERNEL=$(basename $(ls -d /usr/src/kernels/* | head -n 1))
+fi
+
+# We need the shim before we build the driver:
+echo "Compiling and installing shim..."
+date
+pushd el9/nvidia-pfn-shim-1.0
+  # Override KDIR if building inside the container environment
+  if [ -d "/usr/src/kernels/$TARGET_KERNEL" ] && [ ! -d "/lib/modules/$(uname -r)/build" ]; then
+    export KDIR="/usr/src/kernels/$TARGET_KERNEL"
+  fi
+
+  echo "  ... make: $KDIR"
+  make
+
+  # Ensure the target directory structure exists before copying
+  INSTALL_DIR="/lib/modules/${TARGET_KERNEL}/extra"
+  mkdir -p "$INSTALL_DIR"
+
+  echo "  ... install: $INSTALL_DIR"
+  install -D -m 644 nvidia-pfn-shim.ko "${INSTALL_DIR}/nvidia-pfn-shim.ko"
+
+  echo "  ... check with nm and modinfo"
+  nm -n nvidia-pfn-shim.ko
+  modinfo nvidia-pfn-shim.ko
+
+  echo "  ... copy Module.symvers over"
+  cp Module.symvers /usr/src/nvidia-470.256.02/
+popd
+
+# The main driver
+echo "Patching the driver..."
+date
+./el9/patch
+
+echo "DKMS-building and installing the driver for $TARGET_KERNEL..."
+date
+dkms build -m nvidia -v 470.256.02 -k $TARGET_KERNEL
+dkms install -m nvidia -v 470.256.02 -k $TARGET_KERNEL
+
+echo "$0: DONE"
+date
