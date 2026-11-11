@@ -34,7 +34,7 @@ apply_patch nvidia-470xx-fix-linux-7.3.patch
 apply_patch nvidia-470xx-fix-linux-7.4.patch
 apply_patch nvidia-470xx-fix-clang.patch
 if [ -n "${NVIDIA_470XX_APPLY_STAGING_PATCHES:-}" ]; then
-    :
+    apply_patch staging/nvidia-470xx-fix-linux-next.patch
 fi
 apply_patch disable-objtool-override.patch
 apply_patch enable-drm-modeset-by-default.patch

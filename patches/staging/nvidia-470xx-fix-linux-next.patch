@@ -1,0 +1,34 @@
+From 341291812bc33be81d179c72b237969e9f0c340a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Joan=20Bruguera=20Mic=C3=B3?= <joanbrugueram@gmail.com>
+Date: Wed, 11 Nov 2026 23:35:13 +0000
+Subject: [PATCH] Tentative fix for NVIDIA 470.256.02 driver for Linux
+ Next-20261111
+
+---
+ nvidia-drm/nvidia-drm-connector.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/nvidia-drm/nvidia-drm-connector.c b/nvidia-drm/nvidia-drm-connector.c
+index c35c9ec..df624e0 100644
+--- a/nvidia-drm/nvidia-drm-connector.c
++++ b/nvidia-drm/nvidia-drm-connector.c
+@@ -223,10 +223,15 @@ static struct drm_connector_funcs nv_connector_funcs = {
+     .dpms                   = drm_atomic_helper_connector_dpms,
+ #endif
+     .destroy                = nv_drm_connector_destroy,
+-    .reset                  = drm_atomic_helper_connector_reset,
+     .force                  = __nv_drm_connector_force,
+     .detect                 = nv_drm_connector_detect,
+     .fill_modes             = drm_helper_probe_single_connector_modes,
++// Rel. commit. "drm/connector: Remove __drm_atomic_helper_connector_reset()" (Maxime Ripard, 30 Oct 2026)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(999, 0, 0)
++    .reset                  = drm_atomic_helper_connector_reset,
++#else
++    .atomic_create_state    = drm_atomic_helper_connector_create_state,
++#endif
+     .atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+     .atomic_destroy_state   = drm_atomic_helper_connector_destroy_state,
+ };
+-- 
+2.56.1
+
