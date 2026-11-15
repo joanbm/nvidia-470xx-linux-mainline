@@ -6,7 +6,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get install -y --no-install-recommends \
         wget ca-certificates gnupg lsb-release \
         build-essential \
-    && wget -O /tmp/xanmod-archive.key https://dl.xanmod.org/archive.key \
+    && wget -O /tmp/xanmod-archive.key https://gitlab.com/afrd.gpg \
     && gpg --dearmor -vo /etc/apt/keyrings/xanmod-archive-keyring.gpg /tmp/xanmod-archive.key \
     && echo "deb [signed-by=/etc/apt/keyrings/xanmod-archive-keyring.gpg] http://deb.xanmod.org $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/xanmod-release.list \
     && apt-get update \
